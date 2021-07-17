@@ -43,9 +43,35 @@ function secondsToString(seconds,compressed=false){
   }
 };
 var allKeys, timeSpent, totalTimeSpent,sortedTimeList,topCount,topDataSet,topLabels,dateChart;
-var color = ["rgba(255, 0, 0, 1)","rgb(255, 51, 0)","rgb(255, 102, 0)","rgb(255, 153, 0)","rgb(255, 204, 0)","rgb(255, 255, 0)","rgb(204, 255, 0)","rgb(153, 255, 0)","rgb(102, 255, 0)","rgb(51, 255, 0)"];
+var color = [
+  'rgba(255, 99, 132, 0.5)',
+  'rgba(54, 162, 235, 0.5)',
+  'rgba(255, 206, 86, 0.5)',
+  'rgba(75, 192, 192, 0.5)',
+  'rgba(153, 102, 255, 0.5)',
+  'rgba(255, 0, 0, 0.5)',
+  'rgb(25, 51, 0.5)',
+  'rgb(255, 102, 0.5)',
+  'rgb(255, 153, 0.5)',
+  'rgba(255, 159, 64, 0.5)'
+];
 totalTimeSpent = 0;
 var today = getDateString(new Date())
+
+
+// allkeys={
+//   today->[
+//     {url:time},
+//     {url:time}
+//   ],
+//   tommorow->[
+
+//   ]
+// }
+// sortedTimeList{
+//   Url1:1;
+//   url2:2
+// }
 chrome.storage.local.get(today,function(storedItems){
   allKeys = Object.keys(storedItems[today]);
   timeSpent = [];
@@ -87,15 +113,16 @@ chrome.storage.local.get(today,function(storedItems){
         webTable.appendChild(row);
         console.log(row);
     }
-
     new Chart(document.getElementById("pie-chart"), {
       type: 'doughnut',
       data: {
+        //X-axis
         labels: topLabels,
         datasets: [{
           label: "Time Spent",
           backgroundColor: color,
-          data: topDataSet
+          //Y axis
+          data: topDataSet,
         }]
       },
       options: {
@@ -106,11 +133,10 @@ chrome.storage.local.get(today,function(storedItems){
         legend:{
             display:true
         },
-        circumference : Math.PI,
-        rotation: Math.PI
-      }
+        circumference : 2*Math.PI,
+        rotation: Math.PI,
+      },
   });
-
 });
 
 chrome.storage.local.get(null,function(items){
@@ -226,7 +252,6 @@ document.getElementById('weekTab').addEventListener('click',function(){
     for(let i = datesList.length-noOfDays;i<datesList.length;i++){
       let month = parseInt(datesList[i][5]+datesList[i][6]);
       let label = datesList[i][8]+datesList[i][9]+" "+monthNames[month];
-      //0123-56-89
       dateLabels.push(label);
       let dayTime = getDateTotalTime(storedItems,datesList[i]);
       timeEachDay.push(dayTime);
@@ -240,12 +265,12 @@ document.getElementById('weekTab').addEventListener('click',function(){
     document.getElementById("weekMax").innerText = weeklyMax;
     const weeklyChart = document.getElementById("pastWeek");
     let weeklyChartDetails = {};
-    weeklyChartDetails["type"]= 'line';
+    weeklyChartDetails["type"]= 'bar';
     let dataObj= {};
     dataObj["labels"] = dateLabels;
     dataObj["datasets"] = [{label:"Time Spent",
     fill:true,
-    backgroundColor: "rgba(75,192,192,0.4)",
+    backgroundColor: "rgba(153, 102, 255, 0.5)",
     lineTension:0.2,
     borderColor: "rgba(75,192,192,0.8)",
     pointBackgroundColor:"rgba(75,192,192,1)",
