@@ -1,3 +1,4 @@
+//Removes the un-necessary Info in Date format
 function getDateString(nDate){
   let nDateDate=nDate.getDate();
   let nDateMonth=nDate.getMonth()+1;
@@ -7,11 +8,15 @@ function getDateString(nDate){
   let presentDate = ""+nDateYear+"-"+nDateMonth+"-"+nDateDate;
   return presentDate;
 }
+
+//Gets the Host by splitting the string at "/"
 function getDomain(tablink){
     let url =  tablink[0].url;
+    // (https:)/()/(abc.com)/images => 3rd part
     return url.split("/")[2];
 };
 
+//We only store the seconds so we converts into proper format by this.
 function secondsToString(seconds,compressed=false){
   let hours = parseInt(seconds/3600);
   seconds = seconds%3600;
@@ -43,6 +48,7 @@ function secondsToString(seconds,compressed=false){
   }
 };
 var allKeys, timeSpent, totalTimeSpent,sortedTimeList,topCount,topDataSet,topLabels,dateChart;
+// Colors for the Pie chart
 var color = [
   'rgba(255, 99, 132, 0.5)',
   'rgba(54, 162, 235, 0.5)',
@@ -58,20 +64,27 @@ var color = [
 totalTimeSpent = 0;
 var today = getDateString(new Date())
 
-
+//Format of allKeys
 // allkeys={
 //   today->[
 //     {url:time},
 //     {url:time}
 //   ],
 //   tommorow->[
-
+    // {url:time},
+    //  {url:time}
 //   ]
 // }
+
+//Format of sortedTimeList
 // sortedTimeList{
 //   Url1:1;
 //   url2:2
 // }
+
+
+
+//For the first tab -> "Todays Stats"
 chrome.storage.local.get(today,function(storedItems){
   allKeys = Object.keys(storedItems[today]);
   timeSpent = [];
@@ -97,45 +110,45 @@ chrome.storage.local.get(today,function(storedItems){
   }
   
 
-    const webTable = document.getElementById('webList');
-    for(let i = 0; i<allKeys.length;i++){
-        let webURL = sortedTimeList[i][0];
-        let row = document.createElement('tr');
-        let serialNumber = document.createElement('td');
-        serialNumber.innerText = i+1;
-        let siteURL = document.createElement('td');
-        siteURL.innerText= webURL;
-        let siteTime = document.createElement('td');
-        siteTime.innerText = secondsToString(sortedTimeList[i][1]);
-        row.appendChild(serialNumber);
-        row.appendChild(siteURL);
-        row.appendChild(siteTime);
-        webTable.appendChild(row);
-        console.log(row);
-    }
-    new Chart(document.getElementById("pie-chart"), {
-      type: 'doughnut',
-      data: {
-        //X-axis
-        labels: topLabels,
-        datasets: [{
-          label: "Time Spent",
-          backgroundColor: color,
-          //Y axis
-          data: topDataSet,
-        }]
+  const webTable = document.getElementById('webList');
+  for(let i = 0; i<allKeys.length;i++){
+      let webURL = sortedTimeList[i][0];
+      let row = document.createElement('tr');
+      let serialNumber = document.createElement('td');
+      serialNumber.innerText = i+1;
+      let siteURL = document.createElement('td');
+      siteURL.innerText= webURL;
+      let siteTime = document.createElement('td');
+      siteTime.innerText = secondsToString(sortedTimeList[i][1]);
+      row.appendChild(serialNumber);
+      row.appendChild(siteURL);
+      row.appendChild(siteTime);
+      webTable.appendChild(row);
+      console.log(row);
+  }
+  new Chart(document.getElementById("pie-chart"), {
+    type: 'doughnut',
+    data: {
+      //X-axis
+      labels: topLabels,
+      datasets: [{
+        label: "Time Spent",
+        backgroundColor: color,
+        //Y axis
+        data: topDataSet,
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: "Top Visited Sites Today"
       },
-      options: {
-        title: {
-          display: true,
-          text: "Top Visited Sites Today"
-        },
-        legend:{
-            display:true
-        },
-        circumference : 2*Math.PI,
-        rotation: Math.PI,
+      legend:{
+          display:true
       },
+      circumference : 2*Math.PI,
+      rotation: Math.PI,
+    },
   });
 });
 
@@ -149,7 +162,7 @@ chrome.storage.local.get(null,function(items){
   calendar.max = maxDate;
 });
 
-
+//For the second tab => "Daily Report"
 document.getElementById("dateSubmit").addEventListener('click',function(){
   const calendar = document.getElementById("dateValue");
   if(calendar.value===""){
@@ -240,6 +253,8 @@ function getDateTotalTime(storedObject,date){
   }
   return totalTime;
 };
+
+//For third tab => "Recent summary"
 var monthNames = ["","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 document.getElementById('weekTab').addEventListener('click',function(){
   chrome.storage.local.get(null,function(storedItems){
