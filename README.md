@@ -1,5 +1,5 @@
 # Web-Time Tracker 
-<br> <img src = "icons/icon128.png" height = "400">
+<br> <img src = "icons/icon128.png">
 ---
 A Chrome Extension that presents you the detailed information about the time you have on different websites,each day using charts and tables.
 This Extension uses only local [chrome.storage API](https://developer.chrome.com/docs/apps/manifest/storage/) chrome.storage API to store data and it does't send data anywhere.
